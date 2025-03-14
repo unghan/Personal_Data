@@ -12,92 +12,120 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: black;
+            background: url('back.png') no-repeat center center;
+            background-size: cover;
             color: white;
             overflow: hidden;
+            flex-direction: column;
+            transition: background 1s ease-in-out;
         }
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            position: absolute;
-            z-index: 10;
-        }
+
+        /* 입력창 스타일 (크기 키움) */
         input {
-            padding: 10px;
-            font-size: 16px;
-            width: 80%;
+            padding: 15px;
+            font-size: 20px;
+            width: 250px;
             text-align: center;
-            border: none;
+            border: 3px solid black;
+            background: white;
+            color: black;
             outline: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: bold;
         }
+
+        /* 버튼 스타일 (크기 키움) */
         button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
+            margin-top: 15px;
+            padding: 15px 25px;
+            font-size: 20px;
+            border: 3px solid black;
             background: white;
             color: black;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: bold;
             transition: 0.3s;
         }
+
         button:hover {
-            background: gray;
+            background: black;
+            color: white;
         }
+
         .unknown-container {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             display: none;
             overflow: hidden;
         }
-        .unknown {
+
+        .unknown-text {
             position: absolute;
             font-size: 20px;
             font-weight: bold;
-            white-space: nowrap;
+            color: white;
             opacity: 0;
-            animation: expandUnknown 5s forwards;
+            animation: fadeInScale 3s linear infinite;
+            white-space: nowrap;
         }
-        @keyframes expandUnknown {
+
+        @keyframes fadeInScale {
             0% {
                 opacity: 0;
-                transform: scale(0.5);
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(3);
             }
             100% {
-                opacity: 1;
-                transform: scale(5);
+                opacity: 0;
+                transform: scale(10);
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="inputContainer">
-        <h2>Enter Name</h2>
-        <input type="text" id="nameInput" placeholder="Your Name">
-        <button onclick="showUnknown()">Confirm</button>
-    </div>
+    <input type="text" id="nameInput" placeholder="Name">
+    <button onclick="startUnknownEffect()">Catch!</button>
 
-    <div id="unknownContainer" class="unknown-container"></div>
+    <div class="unknown-container" id="unknownContainer"></div>
 
     <script>
-        function showUnknown() {
-            document.getElementById("inputContainer").style.display = "none";
-            document.getElementById("unknownContainer").style.display = "block";
+        function startUnknownEffect() {
+            // 입력칸 & 버튼 숨기기
+            document.getElementById("nameInput").style.display = "none";
+            document.querySelector("button").style.display = "none";
+            
+            // 배경을 검정색으로 변경 (이미지 제거)
+            document.body.style.background = "black";
 
-            for (let i = 0; i < 30; i++) {
-                let unknown = document.createElement("div");
-                unknown.className = "unknown";
-                unknown.textContent = "UNKNOWN";
-                unknown.style.left = Math.random() * 100 + "vw";
-                unknown.style.top = Math.random() * 100 + "vh";
-                unknown.style.animationDelay = Math.random() * 2 + "s";
-                document.getElementById("unknownContainer").appendChild(unknown);
-            }
+            // UNKNOWN 애니메이션 시작
+            document.getElementById("unknownContainer").style.display = "block";
+            generateUnknownText();
+            setInterval(generateUnknownText, 500);
+        }
+
+        function generateUnknownText() {
+            const container = document.getElementById("unknownContainer");
+            const unknown = document.createElement("div");
+            unknown.classList.add("unknown-text");
+            unknown.innerText = "UNKNOWN";
+
+            unknown.style.left = Math.random() * 100 + "vw";
+            unknown.style.top = Math.random() * 100 + "vh";
+            unknown.style.animationDuration = `${2 + Math.random() * 3}s`;
+
+            container.appendChild(unknown);
+
+            setTimeout(() => {
+                unknown.remove();
+            }, 3000);
         }
     </script>
 
